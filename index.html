@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GoJS LayeredDigraph Graph Example</title>
+  <script src="https://unpkg.com/gojs/release/go.js"></script>
+</head>
+<body>
+  <div id="myDiagramDiv" style="width:800px; height:600px; border:1px solid black"></div>
+  <script>
+    function init() {
+      var $ = go.GraphObject.make;
+      var myDiagram =
+        $(go.Diagram, "myDiagramDiv",
+          {
+            "undoManager.isEnabled": true,
+            layout: $(go.LayeredDigraphLayout, // use a layered layout
+                      { direction: 90, columnSpacing: 30, layerSpacing: 40 }) // configure to mimic a tree
+          });
+          myDiagram.layout = 
+          $(go.TreeLayout,
+            {
+              angle:90,
+              layerSpacing: 50,
+              nodeSpacing: 200,
+            });
+      // define each Node's appearance
+      myDiagram.nodeTemplate =
+      $(go.Node, "Auto", 
+        $(go.Shape, "Rectangle",
+          { strokeWidth: 0, fill: "lightblue" },
+          new go.Binding("fill", "color"),
+          new go.Binding("desiredSize", "size").makeTwoWay()), // Hace que el tamaño del nodo se ajuste automáticamente al texto
+        $(go.TextBlock,
+          { 
+            margin: 10, 
+            font: "italic 14pt sans-serif",
+            stroke: "black",
+            wrap: go.TextBlock.WrapFit,
+            // maxSize: new go.Size(500, NaN), // Establece el tamaño máximo del texto para ajustar el tamaño del nodo
+            alignment: go.Spot.Center, // Alinea el texto en el centro del nodo
+            stretch: go.GraphObject.Horizontal, // Hace que el texto se ajuste horizontalmente
+            width: 100,
+            height: 60,
+            verticalAlignment: go.Spot.Top,
+            textAlign: "center"
+          },
+          new go.Binding("text", "key")),
+        $(go.TextBlock,
+          {
+            margin: 8, 
+            font: "italic 10pt sans-serif",
+            stroke: "black",
+            wrap: go.TextBlock.WrapFit,
+            // maxSize: new go.Size(500, NaN), // Establece el tamaño máximo del texto para ajustar el tamaño del nodo
+            alignment: go.Spot.Center, // Alinea el texto en el centro del nodo
+            stretch: go.GraphObject.Horizontal, // Hace que el texto se ajuste horizontalmente
+            width: 100,
+            height: 30,
+            verticalAlignment: go.Spot.Center,
+            textAlign: "center"
+          },
+          new go.Binding("text", "description"))
+      );
+
+
+      // define each Link's appearance
+      myDiagram.linkTemplate =
+        $(go.Link,
+          { routing: go.Routing.AvoidsNodes },
+        // { curve: go.Curve.Bezier, curviness: 180 },
+          $(go.Shape),
+          $(go.Shape, { toArrow: "Standard", stroke: null })
+        );
+
+      // create the model for the network
+      var nodeDataArray = [
+        { key: "A", color: "lightblue", description: "MESA"},
+        { key: "B", color: "orange", description: "AlGO"},
+        { key: "C", color: "lightgreen"},
+        { key: "D", color: "pink" },
+        { key: "E", color: "yellow" },
+        { key: "F", color: "red" }
+      ];
+      var linkDataArray = [
+        { from: "A", to: "B" },
+        { from: "A", to: "C" },
+        { from: "B", to: "D" },
+        { from: "B", to: "F" },
+        { from: "C", to: "D" },
+        { from: "C", to: "E" },
+        { from: "C", to: "B" },
+        { from: "D", to: "F" }
+      ];
+      myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+    }
+    init();
+  </script>
+  <!-- <script>
+    function init(){
+        go.licenseKey = "54ff40e6b21c28c702d95d76423d38f919a57563c8841da30a0717f6ef086c46729cb87154c19bc7daa84efc492e928d88c56e299344073eb538d6d810e587fde23023601756419cb40573939ffa78f1fd6a61f1c3b57ebdd8678cf6";
+        var $ = go.GraphObject.make;;
+        myDiagram = $(go.Diagram, "myDiagramDiv");
+        myDiagram.nodeTemplate =
+            $(go.Node, "Auto",
+                $(go.Shape, "RoundedRectangle", {fill: "lightblue"}),
+                $(go.TextBlock, {margin: 8},
+                    new go.Binding("text", "key")
+                )
+            );
+
+        myDiagram.layout = 
+          $(go.TreeLayout,
+            {
+              angle:90,
+              layerSpacing: 100,
+              nodeSpacing: 100,
+            });
+
+        myDiagram.model =
+            $(go.GraphLinksModel,
+            {
+              nodeDataArray: [
+                  { key: "A", color: "lightblue", description: "MESA"},
+                  { key: "B", color: "orange", description: "AlGO"},
+                  { key: "C", color: "lightgreen"},
+                  { key: "D", color: "pink" },
+                  { key: "E", color: "yellow" },
+                  { key: "F", color: "red" }
+              ],
+              linkDataArray: [
+                  { from: "A", to: "B" },
+                  { from: "A", to: "C" },
+                  { from: "B", to: "D" },
+                  { from: "B", to: "F" },
+                  { from: "C", to: "D" },
+                  { from: "C", to: "E" },
+                  { from: "C", to: "B" },
+                  { from: "D", to: "F" }
+                ]
+            })
+    }
+    init(); -->
+  <!-- </script> -->
+</body>
+</html>
